@@ -6,6 +6,15 @@ from models import db, Plant
 class TestPlant:
     '''Flask application in app.py'''
 
+    def setup_method(self):
+        with app.app_context():
+            db.session.query(Plant).delete()
+            db.session.commit()
+            # Add a default plant for tests that need it
+            plant = Plant(name="Test Plant", image="http://example.com/image.png", price=10.0)
+            db.session.add(plant)
+            db.session.commit()
+
     def test_plants_get_route(self):
         '''has a resource available at "/plants".'''
         response = app.test_client().get('/plants')
@@ -63,4 +72,3 @@ class TestPlant:
         assert(type(data) == dict)
         assert(data["id"])
         assert(data["name"])
-                

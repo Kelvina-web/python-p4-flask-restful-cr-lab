@@ -6,6 +6,15 @@ from models import db, Plant
 class TestPlant:
     '''Plant model in models.py'''
 
+    def setup_method(self):
+        with app.app_context():
+            db.session.query(Plant).delete()
+            db.session.commit()
+            # Add a default plant for tests that need it
+            plant = Plant(name="Test Plant", image="http://example.com/image.png", price=10.0)
+            db.session.add(plant)
+            db.session.commit()
+
     def test_can_instantiate(self):
         '''can be instantiated with a name.'''
         p = Plant(name="Douglas Fir")
